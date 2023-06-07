@@ -9,5 +9,9 @@
         "ecmaVersion": "latest"
     },
     "rules": {
+        "no-console": "off",
+        "no-unused-vars": "off",
+        "space-infix-ops": "off",
+        "class-methods-use-this": "off"
     }
 }
