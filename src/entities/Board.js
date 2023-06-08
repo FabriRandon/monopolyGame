@@ -10,5 +10,11 @@ class Board {
     let index = this.squares.indexOf(square);
     index !== -1 ? this.casillas.splice(index, 1) : "";
   }
+  updateState() {
+    //Obtiene el estado del game
+    return {
+      id: this.idBoard,
+    };
+  }
 }
 module.exports = Board;

@@ -1,33 +1,32 @@
-const C = require('../../constants/GameConstants');
+const C = require('../constants/GameConstants');
 
 class Game {
   constructor(config) {
     this.players = config.players ?? [];
     this.board = config.board ?? null;
     this.turno = config.idTurno ?? C.TURNO_INICIAL;
-    this.juegoFinalizado = config.juegoFinalizado ?? false;
-    this.juegoComenzado = config.juegoComenzado ?? false;
+    this.gameFinalizado = config.gameFinalizado ?? false;
+    this.gameComenzado = config.gameComenzado ?? false;
     this.idGame = config.idGame ?? -1;
-
-    if(config.players) {
-        this.players.forEach(player => {
-          player.idGame = this.idGame;
-      });
-    }
   }
 
   joinGame(player) {
-    this.player.idGame = this.idGame;
     this.players.push(player);
   }
 
   inicializarGame() { 
-    if(!this.juegoComenzado) {
-        //Si el juego no ha comenzado, quiere decir que es nuevo
+    if(!this.gameComenzado) {
+        //Si el game no ha comenzado, quiere decir que es nuevo
         this.definirTurnos();
-        this.juegoComenzado = true;
+        this.gameComenzado = true;
     }
   }
+
+  procesarAccion(idJugador, accion) {
+    //Método encargado de ejecutar todas las acciones de los jugadores
+
+  }
+
   definirTurnos() {
     const listaNum = [];
     for(let i=0;i<this.players.length;i++) {
@@ -43,13 +42,13 @@ class Game {
     }
     this.players = ordenados;
   }
-  getState() {
-    //Obtiene el estado del juego
-    return{
-      players: this.players,
-      board: this.board,
+  updateState() {
+    //Obtiene el estado del game
+    return {
       turno: this.turno,
-      juego: this.juegoFinalizado}
+      gameFinalizado: this.gameFinalizado,
+      gameComenzado: this.gameComenzado
+    };
   }
 }
 module.exports = Game;
