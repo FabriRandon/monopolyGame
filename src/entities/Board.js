@@ -10,6 +10,11 @@ class Board {
     let index = this.squares.indexOf(square);
     index !== -1 ? this.casillas.splice(index, 1) : "";
   }
+
+  moverPlayer(player, players) {
+    console.log("\nMoviendo jugador en board!!!\n");
+  }
+
   updateState() {
     //Obtiene el estado del game
     return {

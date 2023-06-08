@@ -8,6 +8,8 @@ class Player {
       this.bancarrota = config.bancarrota ?? false;
       this.squareActual = config.squareActual ?? C.SQUARE_INICIAL;
       this.idPlayer = config.idPlayer ?? -1;
+      this.numTurno = config.numTurno ?? -1;
+      this.isMovBoard = config.isMovBoard ?? false;
     }
     lanzarDado() {
       return Math.floor(Math.random() * C.DADOS_MAX_VALOR)
@@ -19,7 +21,9 @@ class Player {
         nombre: this.nombre,
         dinero: this.dinero,
         bancarrota: this.bancarrota,
-        squareActual: this.squareActual
+        squareActual: this.squareActual,
+        numTurno: this.numTurno,
+        isMovBoard: this.isMovBoard
       };
     }
   }

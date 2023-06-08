@@ -34,6 +34,8 @@ class GameManager {
                 dinero: playerBBDD.dinero,
                 bancarrota: playerBBDD.bancarrota,
                 squareActual: playerBBDD.squareActual,
+                numTurno: playerBBDD.numTurno,
+                isMovBoard: playerBBDD.isMovBoard
             });
             game.joinGame(player);
             return game;
@@ -75,6 +77,8 @@ class GameManager {
                         dinero: player.dinero,
                         bancarrota: player.bancarrota,
                         squareActual: player.squareActual,
+                        numTurno: player.numTurno,
+                        isMovBoard: player.isMovBoard
                     }))
                 })
             }
@@ -130,9 +134,14 @@ class GameManager {
     async startGame(idGame) {
 
         let game = await this.findGame(idGame);
-        game.inicializarGame();
-        await this.saveChanges(idGame);
-        return game;
+        if(!game.error) {
+            game.inicializarGame();
+            await this.saveChanges(idGame);
+            return game;
+        }
+        return {error: "Juego no encontrado"}
+
+
     }
 
 }

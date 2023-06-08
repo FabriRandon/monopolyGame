@@ -47,6 +47,8 @@ class DBManager {
             'dinero': C.DINERO_INICIAL,
             'bancarrota': false,
             'squareActual': C.SQUARE_INICIAL,
+            'numTurno': -1,
+            'isMovBoard': false,
             'idGame': idGame,
         });
         return playerBBDD;

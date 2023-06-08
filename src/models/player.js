@@ -20,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     dinero: DataTypes.INTEGER,
     bancarrota: DataTypes.BOOLEAN,
     squareActual: DataTypes.INTEGER,
+    numTurno: DataTypes.INTEGER,
+    isMovBoard: DataTypes.BOOLEAN,
     idGame: DataTypes.INTEGER
   }, {
     sequelize,

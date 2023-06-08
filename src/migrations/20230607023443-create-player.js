@@ -21,6 +21,12 @@ module.exports = {
       squareActual: {
         type: Sequelize.INTEGER
       },
+      numTurno: {
+        type: Sequelize.INTEGER,
+      },
+      isMovBoard: {
+        type: Sequelize.BOOLEAN
+      },
       idGame: {
         type: Sequelize.INTEGER,
         references: { model: 'Games', key: 'id' },
