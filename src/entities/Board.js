@@ -12,7 +12,8 @@ class Board {
   }
 
   moverPlayer(player, players) {
-    console.log("\nMoviendo jugador en board!!!\n");
+    let valorMov = player.lanzarDado();
+    player.moverPlayer(valorMov);
   }
 
   updateState() {

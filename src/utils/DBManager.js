@@ -32,6 +32,20 @@ class DBManager {
         return boardBBDD
     }
 
+    async findProperties(idBoard) {
+        let propertyBBDD = await this.orm.Property.findAll({
+            where: {
+                idBoard: idBoard
+            }
+        })
+        return propertyBBDD;
+    }
+
+    async generateSquares() {
+        let squaresBBDD = await this.orm.MoldSquare.findAll();
+        return squaresBBDD;
+    }
+
     async createGame() {
         let gameBBDD = await this.orm.Game.create({
             'turno': C.TURNO_INICIAL,
@@ -59,6 +73,27 @@ class DBManager {
         });
         return boardBBDD;
     }
+    async createProperty({
+        nombre = C.NOMBRE_DEFAULT,
+        precio = C.PRECIO_DEFAULT,
+        baseAlquiler = C.BASE_ALQUILER_DEFAULT,
+        nivelEstructura = C.NIVEL_ESTRUCTURA_DEFAULT,
+        color = C.COLOR_DEFAULT,
+        idPlayer = null,
+        idBoard = null
+      }) {
+        let propertyBBDD = await this.orm.Property.create({
+          nombre: nombre,
+          precio: precio,
+          baseAlquiler: baseAlquiler,
+          nivelEstructura: nivelEstructura,
+          color: color,
+          idPlayer: idPlayer,
+          idBoard: idBoard
+        });
+      
+        return propertyBBDD;
+    }
 
     async updateGame(idGame, updatedData) {
         let gameBBDD = await this.orm.Game.findByPk(idGame);
@@ -84,6 +119,16 @@ class DBManager {
             Object.assign(boardBBDD, updatedData);
             await boardBBDD.save();
             return boardBBDD;
+        }
+        return null;
+    }
+
+    async updateProperty(idProperty, updatedData) {
+        let propertyBBDD = await this.orm.Property.findByPk(idProperty);
+        if(propertyBBDD) {
+            Object.assign(propertyBBDD, updatedData);
+            await propertyBBDD.save();
+            return propertyBBDD;
         }
         return null;
     }

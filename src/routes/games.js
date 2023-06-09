@@ -77,6 +77,7 @@ router.post('games.action', '/action', async(ctx) => {
         const game = await gm.findGame(data.idGame);
         game.procesarAccion(data.idPlayer,data.action);
         gm.saveChanges(data.idGame);
+
         ctx.body = game;
         ctx.status = 201;
 
