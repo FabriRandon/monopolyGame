@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     squareActual: DataTypes.INTEGER,
     numTurno: DataTypes.INTEGER,
     isMovBoard: DataTypes.BOOLEAN,
+    seccionActual: DataTypes.STRING,
     idGame: DataTypes.INTEGER
   }, {
     sequelize,

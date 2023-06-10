@@ -24,6 +24,9 @@ module.exports = {
       color: {
         type: Sequelize.STRING
       },
+      hipotecado: {
+        type: Sequelize.BOOLEAN
+      },
       idPlayer: {
         type: Sequelize.INTEGER,
         references: { model: 'Players', key: 'id' },

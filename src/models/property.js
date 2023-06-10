@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     baseAlquiler: DataTypes.INTEGER,
     nivelEstructura: DataTypes.INTEGER,
     color: DataTypes.STRING,
+    hipotecado: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Property',

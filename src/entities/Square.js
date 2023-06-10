@@ -1,6 +1,7 @@
 class Square {
   constructor(config) {
     this.nombre = config.nombre ?? 'sin nombre';
+    this.id = config.id ?? -1;
   }
   realizarAccion() {
     //Los hijos implementan la accion a su manera

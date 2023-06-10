@@ -63,6 +63,7 @@ class DBManager {
             'squareActual': C.SQUARE_INICIAL,
             'numTurno': -1,
             'isMovBoard': false,
+            'seccionActual': C.SECCIONES.MENU_PRINCIPAL,
             'idGame': idGame,
         });
         return playerBBDD;
@@ -79,6 +80,7 @@ class DBManager {
         baseAlquiler = C.BASE_ALQUILER_DEFAULT,
         nivelEstructura = C.NIVEL_ESTRUCTURA_DEFAULT,
         color = C.COLOR_DEFAULT,
+        hipotecado = false,
         idPlayer = null,
         idBoard = null
       }) {
@@ -88,6 +90,7 @@ class DBManager {
           baseAlquiler: baseAlquiler,
           nivelEstructura: nivelEstructura,
           color: color,
+          hipotecado: hipotecado,
           idPlayer: idPlayer,
           idBoard: idBoard
         });

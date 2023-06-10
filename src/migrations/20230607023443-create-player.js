@@ -27,6 +27,9 @@ module.exports = {
       isMovBoard: {
         type: Sequelize.BOOLEAN
       },
+      seccionActual: {
+        type: Sequelize.STRING
+      },
       idGame: {
         type: Sequelize.INTEGER,
         references: { model: 'Games', key: 'id' },
