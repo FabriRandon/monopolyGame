@@ -17,57 +17,73 @@ class Game {
   }
 
   inicializarGame() {
-      this.definirTurnos();
-      this.gameComenzado = true;
+    this.definirTurnos();
+    this.gameComenzado = true;
   }
 
   procesarAccion(idPlayerSolicitando, accion) {
-    //Método encargado de ejecutar todas las acciones de los jugadores
     this.recargarTurnos();
     this.board.recargarBoard();
     let playerTurno = this.players[this.turno];
+
     if (this.gameComenzado && playerTurno.id === idPlayerSolicitando) {
-      if (playerTurno.seccionActual === C.SECCIONES.MENU_PRINCIPAL) {
-        if (accion == C.MPOPTIONS.MOVER_MAPA && !playerTurno.isMovBoard) {
-          console.log("\nMoviendose en el mapa!!\n");
-          if (this.board) {
-            this.board.moverPlayer(playerTurno, this.players);
+      switch (playerTurno.seccionActual) {
+        case C.SECCIONES.MENU_PRINCIPAL:
+          if (accion == C.MPOPTIONS.MOVER_MAPA && !playerTurno.isMovBoard) {
+            console.log("\nMoviendose en el mapa!!\n");
+            this.board?.moverPlayer(playerTurno, this.players);
+            playerTurno.isMovBoard = true;
+          } else if (accion == C.MPOPTIONS.CONSTRUIR_CASA) {
+            console.log("\nSe ha elegido construir una casa!!\n");
+            playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_CONSTRUIR_CASA;
+          } else if (accion == C.MPOPTIONS.HIPOTECAR_CASA) {
+            console.log("\nSe ha elegido hipotecar una casa!!\n");
+            playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_HIPOTECAR_CASA;
+          } else if (accion == C.MPOPTIONS.HIPOTECAR_POSESION) {
+            console.log("\nSe ha elegido hipotecar una posesion!!\n");
+            playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_HIPOTECAR_POSESION;
+          } else if (accion == C.MPOPTIONS.DESHIPOTECAR_POSESION) {
+            console.log("\nSe ha elegido deshipotecar una posesion!!\n");
+            playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_DESHIPOTECAR_POSESION;
+          } else if (accion == C.MPOPTIONS.TERMINAR_TURNO && playerTurno.isMovBoard) {
+            console.log("\nTerminando el turno!!\n");
+            this.turno += 1;
+            playerTurno.isMovBoard = false;
           }
-          playerTurno.isMovBoard = true;
-        }
-        else if (accion == C.MPOPTIONS.CONSTRUIR_CASA) {
-          console.log("\nConstruyendo una casa!!\n");
-        }
-        else if (accion == C.MPOPTIONS.HIPOTECAR_CASA) {
-          console.log("\nHipotecando una casa!!\n");
-        }
-        else if (accion == C.MPOPTIONS.HIPOTECAR_POSESION) {
-          console.log("\nHipotecando una posesion!!\n");
-        }
-        else if (accion == C.MPOPTIONS.DESHIPOTECAR_POSESION) {
-          console.log("\nDeshipotecando una posesion!!\n");
-        }
-        else if (accion == C.MPOPTIONS.TERMINAR_TURNO && playerTurno.isMovBoard) {
-          console.log("\nTerminando el turno!!\n");
-          this.turno += 1;
-          playerTurno.isMovBoard = false;
-        }
-      }
-      else if (playerTurno.seccionActual === C.SECCIONES.MENU_COMPRAR_APROPIABLE) {
-        if (accion == C.MCOPTIONS.COMPRAR) {
-          //El jugador decide comprar la propiedad
-          console.log("\nComprar propiedad\n");
-          let possessionComprar = this.board.squares[playerTurno.squareActual];
-          playerTurno.comprarPossession(possessionComprar);
+          break;
+
+        case C.SECCIONES.MENU_COMPRAR_APROPIABLE:
+          if (accion == C.MCOPTIONS.COMPRAR) {
+            console.log("\nComprar propiedad\n");
+            let possessionComprar = this.board.squares[playerTurno.squareActual];
+            playerTurno.comprarPossession(possessionComprar);
+            playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
+          } else if (accion == C.MCOPTIONS.NOCOMPRAR) {
+            console.log("\nNO comprar propiedad\n");
+          }
+          break;
+
+        case C.SECCIONES.MENU_ACCION_CONSTRUIR_CASA:
+          console.log("\nEl jugador ha decidido construir una casa\n");
+          playerTurno.construirEstructuraPorID(accion, this.board.squares);
           playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
-        }
-        else if (accion == C.MCOPTIONS.NOCOMPRAR) {
-          //El jugador decide NO comprar la propiedad
-          console.log("\nNO comprar propiedad\n");
-        }
+          break;
+
+        case C.SECCIONES.MENU_ACCION_HIPOTECAR_CASA:
+          console.log("\nEl jugador ha decidido hipotecar una casa\n");
+          playerTurno.hipotecarEstructuraPorID(accion, this.board.squares);
+          playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
+          break;
+        case C.SECCIONES.MENU_ACCION_HIPOTECAR_POSESION:
+          console.log("\nEl jugador ha decidido hipotecar una posesion\n");
+          playerTurno.hipotecarPosesionPorID(accion, this.board.squares);
+          playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
+          break;
+   
       }
     }
   }
+
 
   recargarTurnos() {
     this.players.sort((a, b) => {

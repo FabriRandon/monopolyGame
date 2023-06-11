@@ -1,4 +1,5 @@
 const Property = require('../entities/Possession');
+const C = require('../constants/GameConstants');
 
 class PossessionFilter {
 
@@ -13,6 +14,12 @@ class PossessionFilter {
   }
   static hipotecables(pos) {
     return !pos.hipotecado && pos.nivelEstructura == 0 ? true : false;
+  }
+  static conEstructuras(pos) {
+    return pos instanceof Property && pos.nivelEstructura > 0 ? true : false;
+  }
+  static construibles(pos) {
+    return pos instanceof Property && !pos.hipotecado && pos.nivelEstructura < C.NIVEL_MAX_ESTRUCTURA ? true : false;
   }
 }
 

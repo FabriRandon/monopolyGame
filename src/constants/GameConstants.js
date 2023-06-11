@@ -1,8 +1,8 @@
 class GameConstants {
-    static DINERO_INICIAL = 70; //Sugerencia: 600
+    static DINERO_INICIAL = 600; //Sugerencia: 600
     static SQUARE_INICIAL = 0;
     static DADOS_MIN_VALOR = 0; //Sugerencia: 2
-    static DADOS_MAX_VALOR = 0; //Sugerencia: 12
+    static DADOS_MAX_VALOR = 1; //Sugerencia: 12
     static TURNO_INICIAL = 0;
     static MPOPTIONS = {
         MOVER_MAPA: "movemap",
@@ -31,6 +31,7 @@ class GameConstants {
     static COLOR_DEFAULT = "undefined";
     static NIVEL_COLOR_DEFAULT = 0;
     static NOMBRE_DEFAULT = "unnamed";
+    static NIVEL_MAX_ESTRUCTURA = 5;
 
     static TIPOS_SQUARE = {
         PROPERTY: "Property",

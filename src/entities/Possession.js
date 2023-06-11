@@ -33,7 +33,7 @@ class Possession extends Square {
   }
 
   hipotecar(player) {
-    if(!this.hipotecado) {
+    if(!this.hipotecado && this.idPlayer == player.id) {
       let valorHipoteca = this.calcularHipoteca();
       player.dinero += valorHipoteca;
       this.hipotecado = true;

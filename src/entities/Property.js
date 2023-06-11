@@ -40,7 +40,7 @@ class Property extends Possession {
   }
 
   hipotecarEstructura(player) {
-    if (this.nivelEstructura > 0) {
+    if (this.nivelEstructura > 0 && this.idPlayer == player.id) {
       let montoHipoteca = this.calcularHipotecaEstructura();
       this.nivelEstructura -= 1;
       player.dinero += montoHipoteca;
@@ -57,6 +57,17 @@ class Property extends Possession {
             C.PRECIOS_CONSTRUIR.DEFAULT.PRECIO;
   }
 
+  construirEstructura(player) {
+    if (player.dinero >= this.precioEstructura() && this.idPlayer == player.id &&
+      this.nivelEstructura <= C.NIVEL_MAX_ESTRUCTURA) {
+      player.dinero -= this.precioEstructura();
+      this.nivelEstructura += 1;
+      console.log("El jugador " + player.nombre + " ha subido al nivel " + this.nivelEstructura + " la propiedad " + this.nombre + ", saldo: $" + player.dinero);
+      return true;
+    }
+    return false;
+  }
+
   calcularAlquiler() {
     let alquiler = this.baseAlquiler;
     if (this.nivelEstructura >= 1) alquiler *= (4 + 1 / this.baseAlquiler);
@@ -64,7 +75,7 @@ class Property extends Possession {
     if (this.nivelEstructura >= 3) alquiler *= (2.5 + 1 / this.baseAlquiler);
     if (this.nivelEstructura >= 4) alquiler *= (1.4 + 1 / this.baseAlquiler);
     if (this.nivelEstructura >= 5) alquiler *= (1.2 + 1 / this.baseAlquiler);
-    
+
     return Math.floor(alquiler);
   }
 

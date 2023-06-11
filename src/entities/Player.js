@@ -107,6 +107,39 @@ class Player {
     }
     return false;
   }
+  hipotecarEstructuraPorID(idPossession, squares) {
+    let possessions = this.obtenerPossessions(squares, PossessionFilter.conEstructuras);
+    console.log("\n" + possessions + "\n");
+    for (let possession of possessions) {
+      if (possession.id == idPossession) {
+        possession.hipotecarEstructura(this);
+        return true;
+      }
+    }
+    return false;
+  }
+  construirEstructuraPorID(idPossession, squares) {
+    let possessions = this.obtenerPossessions(squares, PossessionFilter.construibles);
+    console.log("\n" + possessions + "\n");
+    for (let possession of possessions) {
+      if (possession.id == idPossession) {
+        possession.construirEstructura(this);
+        return true;
+      }
+    }
+    return false;
+  }
+  hipotecarPosesionPorID(idPossession, squares) {
+    let possessions = this.obtenerPossessions(squares, PossessionFilter.hipotecables);
+    console.log("\n" + possessions + "\n");
+    for (let possession of possessions) {
+      if (possession.id == idPossession) {
+        possession.hipotecar(this);
+        return true;
+      }
+    }
+    return false;
+  }
 
   comprarPossession(possession) {
     if(this.dinero >= possession.precio) {
