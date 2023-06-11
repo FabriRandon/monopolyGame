@@ -140,6 +140,17 @@ class Player {
     }
     return false;
   }
+  deshipotecarPosesionPorID(idPossession, squares) {
+    let possessions = this.obtenerPossessions(squares, PossessionFilter.hipotecados);
+    console.log("\n" + possessions + "\n");
+    for (let possession of possessions) {
+      if (possession.id == idPossession) {
+        possession.deshipotecar(this);
+        return true;
+      }
+    }
+    return false;
+  }
 
   comprarPossession(possession) {
     if(this.dinero >= possession.precio) {

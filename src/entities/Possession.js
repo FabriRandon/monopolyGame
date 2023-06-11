@@ -31,12 +31,26 @@ class Possession extends Square {
   calcularHipoteca() {
     return this.precio * C.FACTOR_HIPOTECA;
   }
+  calcularDeshipoteca() {
+    return this.precio * C.FACTOR_DESHIPOTECA;
+  }
 
   hipotecar(player) {
     if(!this.hipotecado && this.idPlayer == player.id) {
       let valorHipoteca = this.calcularHipoteca();
       player.dinero += valorHipoteca;
       this.hipotecado = true;
+      return true;
+    }
+    return false;
+  }
+
+  deshipotecar(player) {
+    if(this.hipotecado && player.dinero > this.calcularDeshipoteca() && this.idPlayer == player.id) {
+      let valorDeshipoteca = this.calcularDeshipoteca();
+      player.dinero -= valorDeshipoteca;
+      this.hipotecado = false;
+      console.log("\nSe ha deshipotecado " + this.nombre + " con un costo de $" + valorDeshipoteca + "\n");
       return true;
     }
     return false;

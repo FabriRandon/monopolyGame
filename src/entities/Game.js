@@ -51,7 +51,6 @@ class Game {
             playerTurno.isMovBoard = false;
           }
           break;
-
         case C.SECCIONES.MENU_COMPRAR_APROPIABLE:
           if (accion == C.MCOPTIONS.COMPRAR) {
             console.log("\nComprar propiedad\n");
@@ -62,13 +61,11 @@ class Game {
             console.log("\nNO comprar propiedad\n");
           }
           break;
-
         case C.SECCIONES.MENU_ACCION_CONSTRUIR_CASA:
           console.log("\nEl jugador ha decidido construir una casa\n");
           playerTurno.construirEstructuraPorID(accion, this.board.squares);
           playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
           break;
-
         case C.SECCIONES.MENU_ACCION_HIPOTECAR_CASA:
           console.log("\nEl jugador ha decidido hipotecar una casa\n");
           playerTurno.hipotecarEstructuraPorID(accion, this.board.squares);
@@ -79,7 +76,11 @@ class Game {
           playerTurno.hipotecarPosesionPorID(accion, this.board.squares);
           playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
           break;
-   
+        case C.SECCIONES.MENU_ACCION_DESHIPOTECAR_POSESION:
+          console.log("\nEl jugador ha decidido deshipotecar una posesion\n");
+          playerTurno.deshipotecarPosesionPorID(accion, this.board.squares);
+          playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
+          break;
       }
     }
   }

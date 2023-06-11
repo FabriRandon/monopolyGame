@@ -4,6 +4,24 @@ class GameConstants {
     static DADOS_MIN_VALOR = 0; //Sugerencia: 2
     static DADOS_MAX_VALOR = 1; //Sugerencia: 12
     static TURNO_INICIAL = 0;
+
+    static NIVEL_MAX_ESTRUCTURA = 5;
+
+    static FACTOR_HIPOTECA = 0.5
+    static FACTOR_DESHIPOTECA = 0.6
+    static PRECIOS_CONSTRUIR = {
+        B1: {MENORA: 120, PRECIO: 50},
+        B2: {MENORA: 200, PRECIO: 100},
+        B3: {MENORA: 280, PRECIO: 150},
+        B4: {MENORA: 400, PRECIO: 200},
+        DEFAULT: {PRECIO: 250}
+    }
+
+    static TIPOS_SQUARE = {
+        PROPERTY: "Property",
+        POSSESSION: "Possession",
+        SQUARE: "Square"
+    }
     static MPOPTIONS = {
         MOVER_MAPA: "movemap",
         CONSTRUIR_CASA: "buildhouse",
@@ -16,7 +34,6 @@ class GameConstants {
         COMPRAR: "buy",
         NOCOMPRAR: "nobuy"
     }
-
     static SECCIONES = {
         MENU_PRINCIPAL: "MP",
         MENU_ACCION_CONSTRUIR_CASA: "MAbuildhouse",
@@ -31,20 +48,5 @@ class GameConstants {
     static COLOR_DEFAULT = "undefined";
     static NIVEL_COLOR_DEFAULT = 0;
     static NOMBRE_DEFAULT = "unnamed";
-    static NIVEL_MAX_ESTRUCTURA = 5;
-
-    static TIPOS_SQUARE = {
-        PROPERTY: "Property",
-        POSSESSION: "Possession",
-        SQUARE: "Square"
-    }
-    static FACTOR_HIPOTECA = 0.5
-    static PRECIOS_CONSTRUIR = {
-        B1: {MENORA: 120, PRECIO: 50},
-        B2: {MENORA: 200, PRECIO: 100},
-        B3: {MENORA: 280, PRECIO: 150},
-        B4: {MENORA: 400, PRECIO: 200},
-        DEFAULT: {PRECIO: 250}
-    }
 }
 module.exports = GameConstants;
