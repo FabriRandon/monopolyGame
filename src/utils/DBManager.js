@@ -17,7 +17,8 @@ class DBManager {
     async findPlayers(idGame) {
         let playersBBDD = await this.orm.Player.findAll({
             where: {
-                idGame: idGame
+                idGame: idGame,
+                bancarrota: false
             }
         })
         return playersBBDD

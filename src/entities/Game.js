@@ -82,11 +82,19 @@ class Game {
           playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
           break;
       }
+
     }
   }
 
 
   recargarTurnos() {
+    let alivePlayers = [];
+    for(let i = 0; i < this.players.length; i++) {
+      if(!this.players[i].bancarrota) {
+        alivePlayers.push(this.players[i]);
+      }
+    }
+    this.players = alivePlayers;
     this.players.sort((a, b) => {
       return a.numTurno - b.numTurno;
     })
