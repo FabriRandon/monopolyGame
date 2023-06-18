@@ -9,6 +9,9 @@ const app = new koa();
 
 app.context.orm = orm;
 
+// Configuración de Sequelize para desactivar los logs de consultas
+orm.sequelize.options.logging = false;
+
 app.use(cors2());
 app.use(KoaLogger());
 app.use(koaBody());

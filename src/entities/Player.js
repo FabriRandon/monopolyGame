@@ -75,7 +75,7 @@ class Player {
   }
 
   hipotecarEstructurasAuto(possessions) {
-    let propEstructuras = this.obtenerPossessions(possessions, PossessionFilter.conEstructuras);
+    let propEstructuras = this.obtenerPossessions(possessions, PossessionFilter.conEstructurasHipotecables);
     if (propEstructuras.length > 0) {
       propEstructuras.sort((a, b) => {
         return b.nivelEstructura - a.nivelEstructura;

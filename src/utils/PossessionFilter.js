@@ -24,7 +24,15 @@ class PossessionFilter {
     return pos.nivelEstructura > 0 && allowMortgage ? true : false;
   }
   static hipotecables(pos, possessions) {
-    return !pos.hipotecado && pos.nivelEstructura == 0 ? true : false;
+    let allowMortgage = true;
+    for (let i = 0; i < possessions.length; i++) {
+      if(possessions[i] instanceof Property && possessions[i].color === pos.color && possessions[i].id != pos.id) {
+        if(possessions[i].nivelEstructura != 0) {
+          allowMortgage = false;
+        }
+      }
+    }
+    return !pos.hipotecado && pos.nivelEstructura == 0 && allowMortgage ? true : false;
   }
   static construibles(pos, possessions) {
     let allowBuild = true;

@@ -45,6 +45,7 @@ class Game {
           } else if (accion == C.MPOPTIONS.HIPOTECAR_POSESION) {
             console.log("\nSe ha elegido hipotecar una posesion!!\n");
             playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_HIPOTECAR_POSESION;
+            console.log(playerTurno.obtenerPossessions(this.board.squares, PossessionFilter.hipotecables));
           } else if (accion == C.MPOPTIONS.DESHIPOTECAR_POSESION) {
             console.log("\nSe ha elegido deshipotecar una posesion!!\n");
             playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_DESHIPOTECAR_POSESION;
