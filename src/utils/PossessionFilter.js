@@ -1,4 +1,4 @@
-const Property = require('../entities/Possession');
+const Property = require('../entities/Property');
 const C = require('../constants/GameConstants');
 
 class PossessionFilter {
@@ -21,7 +21,7 @@ class PossessionFilter {
         }
       }
     }
-    return pos.nivelEstructura > 0 && allowMortgage ? true : false;
+    return pos instanceof Property && pos.nivelEstructura > 0 && allowMortgage ? true : false;
   }
   static hipotecables(pos, possessions) {
     let allowMortgage = true;
@@ -32,7 +32,10 @@ class PossessionFilter {
         }
       }
     }
-    return !pos.hipotecado && pos.nivelEstructura == 0 && allowMortgage ? true : false;
+    if(pos instanceof Property && pos.nivelEstructura != 0) {
+      allowMortgage = false;
+    }
+    return !pos.hipotecado && allowMortgage ? true : false;
   }
   static construibles(pos, possessions) {
     let allowBuild = true;
@@ -43,7 +46,7 @@ class PossessionFilter {
         }
       }
     }
-    return !pos.hipotecado && pos.nivelEstructura < C.NIVEL_MAX_ESTRUCTURA
+    return pos instanceof Property && !pos.hipotecado && pos.nivelEstructura < C.NIVEL_MAX_ESTRUCTURA
       && pos.verificarColores(possessions) && allowBuild ? true : false;
   }
 }

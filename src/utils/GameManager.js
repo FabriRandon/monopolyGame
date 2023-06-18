@@ -3,6 +3,7 @@ const Board = require('../entities/Board');
 const Game = require('../entities/Game');
 const Player = require('../entities/Player');
 const Property = require('../entities/Property');
+const Railroad = require('../entities/Railroad');
 const C = require('../constants/GameConstants');
 
 class GameManager {
@@ -37,12 +38,32 @@ class GameManager {
                 nivelEstructura: propertyBBDD.nivelEstructura,
                 color: propertyBBDD.color,
                 hipotecado: propertyBBDD.hipotecado,
+                posicionBoard: propertyBBDD.posicionBoard,
                 id: propertyBBDD.id,
                 idPlayer: propertyBBDD.idPlayer
-            })
+            });
             properties.push(property);
         }
         return properties;
+    }
+
+    async findRailroads(idBoard) {
+        //Buscamos todos los railroads que pertenecen al board
+        let railroads = [];
+        let railroadsBBDD = await this.dbm.findRailroads(idBoard);
+        for (let railroadBBDD of railroadsBBDD) {
+            let railroad = new Railroad({
+                nombre: railroadBBDD.nombre,
+                precio: railroadBBDD.precio,
+                baseAlquiler: railroadBBDD.baseAlquiler,
+                hipotecado: railroadBBDD.hipotecado,
+                posicionBoard: railroadBBDD.posicionBoard,
+                id: railroadBBDD.id,
+                idPlayer: railroadBBDD.idPlayer
+            });
+            railroads.push(railroad);
+        }
+        return railroads;
     }
 
     async findBoard(idGame) {
@@ -99,7 +120,8 @@ class GameManager {
             
             let board = await this.findBoard(idGame);
             let properties = await this.findProperties(board.id);
-            board.asignarSquares(properties);
+            let railroads = await this.findRailroads(board.id);
+            board.asignarSquares(properties.concat(railroads));
             let players = await this.findPlayers(gameBBDD.id);
 
             let game = new Game({
@@ -126,11 +148,11 @@ class GameManager {
     }
 
     async newSquares(idBoard) {
-
         //--- GENERACION DE SQUARES
         let squaresBBDD = await this.dbm.generateSquares();
         let squares = [];
         for (let squareBBDD of squaresBBDD) {
+            console.log(squareBBDD.posicionBoard);
             if (squareBBDD.tipo === C.TIPOS_SQUARE.PROPERTY) {
                 let propertyBBDD = await this.dbm.createProperty({
                     nombre: squareBBDD.nombre,
@@ -139,6 +161,7 @@ class GameManager {
                     nivelEstructura: C.NIVEL_ESTRUCTURA_DEFAULT,
                     color: squareBBDD.color,
                     hipotecado: false,
+                    posicionBoard: squareBBDD.posicionBoard,
                     idBoard: idBoard
                 });
 
@@ -148,10 +171,29 @@ class GameManager {
                     baseAlquiler: squareBBDD.baseAlquiler,
                     nivelEstructura: C.NIVEL_ESTRUCTURA_DEFAULT,
                     color: squareBBDD.color,
-                    nivelColor: C.NIVEL_COLOR_DEFAULT,
                     hipotecado: false,
+                    posicionBoard: squareBBDD.posicionBoard,
                     id: propertyBBDD.id
                 }));
+            }
+            else if(squareBBDD.tipo === C.TIPOS_SQUARE.RAILROAD) {
+                let railroadBBDD = await this.dbm.createRailroad({
+                    nombre: squareBBDD.nombre,
+                    precio: squareBBDD.precio,
+                    baseAlquiler: squareBBDD.baseAlquiler,
+                    hipotecado: false,
+                    posicionBoard: squareBBDD.posicionBoard,
+                    idBoard: idBoard
+                });
+
+                squares.push(new Railroad({
+                    nombre: railroadBBDD.nombre,
+                    precio: railroadBBDD.precio,
+                    baseAlquiler: railroadBBDD.baseAlquiler,
+                    hipotecado: railroadBBDD.hipotecado,
+                    posicionBoard: squareBBDD.posicionBoard,
+                    id: railroadBBDD.id
+                }))
             }
         }
         return squares;
@@ -193,7 +235,10 @@ class GameManager {
 
         for (const square of game.board.squares) {
             if (square instanceof Property) {
-                await this.dbm.updateProperty(square.id, square.updateState());
+                await this.dbm.updateProperty(square.idUpdate, square.updateState());
+            }
+            else if (square instanceof Railroad) {
+                await this.dbm.updateRailroad(square.idUpdate, square.updateState());
             }
         }
 

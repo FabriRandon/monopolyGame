@@ -20,7 +20,7 @@ class DBManager {
                 idGame: idGame,
                 bancarrota: false
             }
-        })
+        });
         return playersBBDD
     }
 
@@ -29,7 +29,7 @@ class DBManager {
             where: {
                 idGame: idGame
             }
-        })
+        });
         return boardBBDD
     }
 
@@ -38,8 +38,17 @@ class DBManager {
             where: {
                 idBoard: idBoard
             }
-        })
+        });
         return propertyBBDD;
+    }
+
+    async findRailroads(idBoard) {
+        let railroadsBBDD = await this.orm.RailRoad.findAll({
+            where: {
+                idBoard: idBoard
+            }
+        });
+        return railroadsBBDD;
     }
 
     async generateSquares() {
@@ -82,6 +91,7 @@ class DBManager {
         nivelEstructura = C.NIVEL_ESTRUCTURA_DEFAULT,
         color = C.COLOR_DEFAULT,
         hipotecado = false,
+        posicionBoard = -1,
         idPlayer = null,
         idBoard = null
       }) {
@@ -92,11 +102,33 @@ class DBManager {
           nivelEstructura: nivelEstructura,
           color: color,
           hipotecado: hipotecado,
+          posicionBoard: posicionBoard,
           idPlayer: idPlayer,
           idBoard: idBoard
         });
       
         return propertyBBDD;
+    }
+    async createRailroad({
+        nombre = C.NOMBRE_DEFAULT,
+        precio = C.PRECIO_DEFAULT,
+        baseAlquiler = C.BASE_ALQUILER_DEFAULT,
+        hipotecado = false,
+        posicionBoard = -1,
+        idPlayer = null,
+        idBoard = null
+      }) {
+        let railroadBBDD = await this.orm.RailRoad.create({
+          nombre: nombre,
+          precio: precio,
+          baseAlquiler: baseAlquiler,
+          hipotecado: hipotecado,
+          posicionBoard: posicionBoard,
+          idPlayer: idPlayer,
+          idBoard: idBoard
+        });
+      
+        return railroadBBDD;
     }
 
     async updateGame(idGame, updatedData) {
@@ -133,6 +165,15 @@ class DBManager {
             Object.assign(propertyBBDD, updatedData);
             await propertyBBDD.save();
             return propertyBBDD;
+        }
+        return null;
+    }
+    async updateRailroad(idRailroad, updatedData) {
+        let railroadBBDD = await this.orm.RailRoad.findByPk(idRailroad);
+        if(railroadBBDD) {
+            Object.assign(railroadBBDD, updatedData);
+            await railroadBBDD.save();
+            return railroadBBDD;
         }
         return null;
     }

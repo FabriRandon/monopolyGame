@@ -27,6 +27,9 @@ module.exports = {
       hipotecado: {
         type: Sequelize.BOOLEAN
       },
+      posicionBoard: {
+        type: Sequelize.INTEGER
+      },
       idPlayer: {
         type: Sequelize.INTEGER,
         references: { model: 'Players', key: 'id' },

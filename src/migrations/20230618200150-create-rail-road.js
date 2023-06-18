@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('MoldSquares', {
+    await queryInterface.createTable('RailRoads', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,14 +18,19 @@ module.exports = {
       baseAlquiler: {
         type: Sequelize.INTEGER
       },
-      color: {
-        type: Sequelize.STRING
-      },
-      tipo: {
-        type: Sequelize.STRING
+      hipotecado: {
+        type: Sequelize.BOOLEAN
       },
       posicionBoard: {
         type: Sequelize.INTEGER
+      },
+      idPlayer: {
+        type: Sequelize.INTEGER,
+        references: { model: 'Players', key: 'id' },
+      },
+      idBoard: {
+        type: Sequelize.INTEGER,
+        references: { model: 'Boards', key: 'id' },
       },
       createdAt: {
         allowNull: false,
@@ -38,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('MoldSquares');
+    await queryInterface.dropTable('RailRoads');
   }
 };

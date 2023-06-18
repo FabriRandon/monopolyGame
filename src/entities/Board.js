@@ -22,7 +22,7 @@ class Board {
 
   recargarBoard() {
     this.squares.sort((a, b) => {
-      return a.id - b.id;
+      return a.posicionBoard - b.posicionBoard;
     })
   }
 

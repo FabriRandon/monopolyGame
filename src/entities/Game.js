@@ -49,6 +49,7 @@ class Game {
           } else if (accion == C.MPOPTIONS.DESHIPOTECAR_POSESION) {
             console.log("\nSe ha elegido deshipotecar una posesion!!\n");
             playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_DESHIPOTECAR_POSESION;
+            console.log(playerTurno.obtenerPossessions(this.board.squares, PossessionFilter.hipotecados));
           } else if (accion == C.MPOPTIONS.TERMINAR_TURNO && playerTurno.isMovBoard) {
             console.log("\nTerminando el turno!!\n");
             this.turno += 1;

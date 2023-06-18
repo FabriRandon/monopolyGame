@@ -12,6 +12,35 @@ class Possession extends Square {
     //Los hijos implementan la accion a su manera
   }
 
+  realizarAccion(player, players, squares) {
+    console.log("\n Has caido en la casilla: " + this.nombre + "\n");
+
+    let propietario = this.revisarPropietario(players, squares);
+    console.log(propietario);
+
+    if (propietario && propietario.id === player.id) {
+      //Caso 1: Si la propiedad tiene propietario y es del jugador de turno
+      console.log("\nEl jugador " + player.nombre + " ha caido en su propiedad\n");
+    }
+    else if (propietario && propietario.id !== player.id) {
+      //Caso 2: Si la propiedad tiene propietario y es de otro jugador
+      console.log("El jugador " + player.nombre + " ha caido en la propiedad de " + propietario.nombre);
+
+      if (!this.hipotecado) {
+        let monto = this.calcularAlquiler(squares);
+        player.pagarRenta(propietario, squares, monto);
+      }
+      else {
+        console.log("La propiedad se encuentra hipotecada");
+      }
+    }
+    else if (!propietario) {
+      //Caso 3: Si la propiedad no tiene propietario, se puede comprar
+      console.log("El jugador " + player.nombre + " ha caido en una propiedad del banco");
+      player.seccionActual = C.SECCIONES.MENU_COMPRAR_APROPIABLE;
+    }
+  }
+
   revisarPropietario(players, squares) {
     //Revisamos si la possession tiene un propietario
     let prop = null;
