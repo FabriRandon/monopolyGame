@@ -108,7 +108,7 @@ class Player {
     return false;
   }
   hipotecarEstructuraPorID(idPossession, squares) {
-    let possessions = this.obtenerPossessions(squares, PossessionFilter.conEstructuras);
+    let possessions = this.obtenerPossessions(squares, PossessionFilter.conEstructurasHipotecables);
     console.log("\n" + possessions + "\n");
     for (let possession of possessions) {
       if (possession.id == idPossession) {

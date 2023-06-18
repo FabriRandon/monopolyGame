@@ -10,17 +10,6 @@ class Property extends Possession {
     this.nivelColor = config.nivelColor ?? C.NIVEL_COLOR_DEFAULT;
   }
 
-  verificarRelativosConstruir(squares) {
-    let allowBuild = true;
-    for (let i = 0; i < squares.length; i++) {
-      if (squares[i] instanceof Property && squares[i].color === this.color && squares[i].id != this.id) {
-        if(this.nivelEstructura > squares[i].nivelEstructura) {
-          allowBuild = false;
-        }
-      }
-    }
-    return allowBuild;
-  }
   verificarColores(squares) {
     let countAllInstances = 0;
     let countPlayerInstances = 0;

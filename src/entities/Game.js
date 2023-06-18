@@ -41,6 +41,7 @@ class Game {
           } else if (accion == C.MPOPTIONS.HIPOTECAR_CASA) {
             console.log("\nSe ha elegido hipotecar una casa!!\n");
             playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_HIPOTECAR_CASA;
+            console.log(playerTurno.obtenerPossessions(this.board.squares, PossessionFilter.conEstructurasHipotecables));
           } else if (accion == C.MPOPTIONS.HIPOTECAR_POSESION) {
             console.log("\nSe ha elegido hipotecar una posesion!!\n");
             playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_HIPOTECAR_POSESION;
