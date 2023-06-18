@@ -22,7 +22,7 @@ class Player {
     let listaPossessions = []
     for (let pos of possessions) {
       if (pos instanceof Possession && pos.idPlayer === this.id) {
-        if (!filtro || filtro(pos)) {
+        if (!filtro || filtro(pos, possessions)) {
           listaPossessions.push(pos);
         }
       }

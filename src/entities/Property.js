@@ -10,6 +10,31 @@ class Property extends Possession {
     this.nivelColor = config.nivelColor ?? C.NIVEL_COLOR_DEFAULT;
   }
 
+  verificarRelativosConstruir(squares) {
+    let allowBuild = true;
+    for (let i = 0; i < squares.length; i++) {
+      if (squares[i] instanceof Property && squares[i].color === this.color && squares[i].id != this.id) {
+        if(this.nivelEstructura > squares[i].nivelEstructura) {
+          allowBuild = false;
+        }
+      }
+    }
+    return allowBuild;
+  }
+  verificarColores(squares) {
+    let countAllInstances = 0;
+    let countPlayerInstances = 0;
+    for (let i = 0; i < squares.length; i++) {
+      if (squares[i] instanceof Property && squares[i].color === this.color) {
+        countAllInstances++;
+        if (this.idPlayer === squares[i].idPlayer) {
+          countPlayerInstances++;
+        }
+      }
+    }
+    return countAllInstances == countPlayerInstances
+  }
+
   realizarAccion(player, players, squares) {
     console.log("\n Has caido en la casilla: " + this.nombre + "\n");
 
@@ -25,7 +50,7 @@ class Property extends Possession {
       console.log("El jugador " + player.nombre + " ha caido en la propiedad de " + propietario.nombre);
 
       if (!this.hipotecado) {
-        let monto = this.calcularAlquiler();
+        let monto = this.calcularAlquiler(squares);
         player.pagarRenta(propietario, squares, monto);
       }
       else {
@@ -68,13 +93,16 @@ class Property extends Possession {
     return false;
   }
 
-  calcularAlquiler() {
+  calcularAlquiler(squares) {
+    let allColors = this.verificarColores(squares)
     let alquiler = this.baseAlquiler;
+    if (allColors && this.nivelEstructura == 0) return Math.floor(alquiler * 2);
     if (this.nivelEstructura >= 1) alquiler *= (4 + 1 / this.baseAlquiler);
     if (this.nivelEstructura >= 2) alquiler *= (3 + 1 / this.baseAlquiler);
     if (this.nivelEstructura >= 3) alquiler *= (2.5 + 1 / this.baseAlquiler);
     if (this.nivelEstructura >= 4) alquiler *= (1.4 + 1 / this.baseAlquiler);
     if (this.nivelEstructura >= 5) alquiler *= (1.2 + 1 / this.baseAlquiler);
+
 
     return Math.floor(alquiler);
   }

@@ -1,4 +1,5 @@
 const C = require('../constants/GameConstants');
+const PossessionFilter = require('../utils/PossessionFilter');
 
 class Game {
   constructor(config) {
@@ -36,6 +37,7 @@ class Game {
           } else if (accion == C.MPOPTIONS.CONSTRUIR_CASA) {
             console.log("\nSe ha elegido construir una casa!!\n");
             playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_CONSTRUIR_CASA;
+            console.log(playerTurno.obtenerPossessions(this.board.squares, PossessionFilter.construibles));
           } else if (accion == C.MPOPTIONS.HIPOTECAR_CASA) {
             console.log("\nSe ha elegido hipotecar una casa!!\n");
             playerTurno.seccionActual = C.SECCIONES.MENU_ACCION_HIPOTECAR_CASA;
@@ -59,6 +61,7 @@ class Game {
             playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
           } else if (accion == C.MCOPTIONS.NOCOMPRAR) {
             console.log("\nNO comprar propiedad\n");
+            playerTurno.seccionActual = C.SECCIONES.MENU_PRINCIPAL;
           }
           break;
         case C.SECCIONES.MENU_ACCION_CONSTRUIR_CASA:

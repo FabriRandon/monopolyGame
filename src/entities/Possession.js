@@ -8,7 +8,7 @@ class Possession extends Square {
     this.hipotecado = config.hipotecado ?? false;
     this.idPlayer = config.idPlayer ?? null;
   }
-  calcularAlquiler() {
+  calcularAlquiler(squares) {
     //Los hijos implementan la accion a su manera
   }
 
