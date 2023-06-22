@@ -10,7 +10,7 @@ class Railroad extends Possession{
   calcularAlquiler(squares) {
     let multiplicador = 0;
     for(let i=0; i < squares.length; i++) {
-      if(squares[i] instanceof Railroad && this.idPlayer == squares[i].idPlayer) {
+      if(squares[i] instanceof Railroad && this.idPlayer == squares[i].idPlayer && squares[i].hipotecado == false) {
         multiplicador++;
       }
     }

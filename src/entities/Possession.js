@@ -13,7 +13,7 @@ class Possession extends Square {
   }
 
   realizarAccion(player, players, squares) {
-    console.log("\n Has caido en la casilla: " + this.nombre + "\n");
+    console.log("\n Has caido en la casilla: " + this.nombre + "en la posicion" + this.posicionBoard + "\n");
 
     let propietario = this.revisarPropietario(players, squares);
     console.log(propietario);
