@@ -15,8 +15,6 @@ router.post('authentication.signup', "/signup", async (ctx) => {
       ctx.status = 400;
       return;
     }
-    console.log("Datos del usuario:---------------------------");
-    console.log(authInfo);
     const answer = await um.signupUser(authInfo.username, authInfo.mail, authInfo.password);
     ctx.body = answer.body;
     ctx.status = answer.status;
