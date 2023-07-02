@@ -1,9 +1,14 @@
 class GameConstants {
-    static DINERO_INICIAL = 2000; //Sugerencia: 1500
+    static DINERO_INICIAL = 1500; //Sugerencia: 1500
     static SQUARE_INICIAL = 0; //Sugerencia: 0
-    static DADOS_MIN_VALOR = 0; //Sugerencia: 2
-    static DADOS_MAX_VALOR = 0; //Sugerencia: 12
+    static DADOS_MIN_VALOR = 2; //Sugerencia: 2
+    static DADOS_MAX_VALOR = 12; //Sugerencia: 12
     static TURNO_INICIAL = 0;
+    static DINERO_POR_VUELTA = 150;
+
+    static MAX_PLAYER_PER_GAME = 4; //Sugerencia: 4
+    static MIN_PLAYER_PER_GAME = 2; //Sugerencia; 2
+    static LEN_NICKNAME_MAX = 12;
 
     static NIVEL_MAX_ESTRUCTURA = 5;
 
@@ -20,7 +25,9 @@ class GameConstants {
     static TIPOS_SQUARE = {
         PROPERTY: "Property",
         RAILROAD: "Railroad",
+        UTILITY: "Utility",
         POSSESSION: "Possession",
+        EMPTY: "Empty",
         SQUARE: "Square"
     }
     static MPOPTIONS = {

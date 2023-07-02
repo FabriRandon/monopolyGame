@@ -12,8 +12,8 @@ class Possession extends Square {
     //Los hijos implementan la accion a su manera
   }
 
-  realizarAccion(player, players, squares) {
-    console.log("\n Has caido en la casilla: " + this.nombre + "en la posicion" + this.posicionBoard + "\n");
+  realizarAccion(player, players, squares, valorDado) {
+    console.log("\n Has caido en la casilla: " + this.nombre + " en la posicion " + this.posicionBoard + "\n");
 
     let propietario = this.revisarPropietario(players, squares);
     console.log(propietario);
@@ -27,7 +27,7 @@ class Possession extends Square {
       console.log("El jugador " + player.nombre + " ha caido en la propiedad de " + propietario.nombre);
 
       if (!this.hipotecado) {
-        let monto = this.calcularAlquiler(squares);
+        let monto = this.calcularAlquiler(squares, valorDado);
         player.pagarRenta(propietario, squares, monto);
       }
       else {

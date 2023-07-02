@@ -53,7 +53,7 @@ class Property extends Possession {
     return false;
   }
 
-  calcularAlquiler(squares) {
+  calcularAlquiler(squares, valorDado) {
     let allColors = this.verificarColores(squares)
     let alquiler = this.baseAlquiler;
     if (allColors && this.nivelEstructura == 0) return Math.floor(alquiler * 2);

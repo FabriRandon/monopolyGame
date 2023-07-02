@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Players', {
+    await queryInterface.createTable('Utilities', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,31 +12,25 @@ module.exports = {
       nombre: {
         type: Sequelize.STRING
       },
-      dinero: {
+      precio: {
         type: Sequelize.INTEGER
       },
-      bancarrota: {
-        type: Sequelize.BOOLEAN
-      },
-      squareActual: {
+      baseAlquiler: {
         type: Sequelize.INTEGER
       },
-      numTurno: {
-        type: Sequelize.INTEGER,
-      },
-      isMovBoard: {
+      hipotecado: {
         type: Sequelize.BOOLEAN
       },
-      seccionActual: {
-        type: Sequelize.STRING
+      posicionBoard: {
+        type: Sequelize.INTEGER
       },
-      idGame: {
+      idPlayer: {
         type: Sequelize.INTEGER,
-        references: { model: 'Games', key: 'id' },
+        references: { model: 'Players', key: 'id' },
       },
-      idUser: {
+      idBoard: {
         type: Sequelize.INTEGER,
-        references: { model: 'Users', key: 'id' },
+        references: { model: 'Boards', key: 'id' },
       },
       createdAt: {
         allowNull: false,
@@ -49,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Players');
+    await queryInterface.dropTable('Utilities');
   }
 };

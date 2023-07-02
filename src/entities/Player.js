@@ -12,10 +12,23 @@ class Player {
     this.numTurno = config.numTurno ?? -1;
     this.isMovBoard = config.isMovBoard ?? false;
     this.seccionActual = config.seccionActual ?? C.SECCIONES.MENU_PRINCIPAL;
+    this.idUser = config.idUser
+    this.votoComienzo = false;
+    this.status = "";
   }
+
+  votarComenzarPartida(comenzar) {
+    this.votoComienzo = comenzar;
+  }
+
   lanzarDado() {
-    return Math.floor(Math.random() * C.DADOS_MAX_VALOR)
-      + C.DADOS_MIN_VALOR;
+
+    let resultado = Math.floor(Math.random() * C.DADOS_MAX_VALOR)
+    + C.DADOS_MIN_VALOR;
+
+    this.status = this.nombre + " ha obtenido " + resultado + " del dado";
+
+    return resultado;
   }
 
   obtenerPossessions(possessions, filtro = null) {
@@ -34,6 +47,8 @@ class Player {
     this.squareActual += cantidad
     while (this.squareActual >= longitudBoard) {
       this.squareActual -= longitudBoard;
+      this.dinero += C.DINERO_POR_VUELTA;
+      this.status = this.nombre + " se le ha pagado " + C.DINERO_POR_VUELTA + " por completar una vuelta";
     }
   }
 
@@ -46,6 +61,7 @@ class Player {
   }
   declararBancarrotaRentas(propietario, possessions) {
     this.bancarrota = true;
+    this.status = this.nombre + " ha caido en bancarrota";
     this.transferirAllPossessions(propietario, possessions);
   }
   transferirAllPossessions(nuevoPropietario, possessions) {
@@ -71,6 +87,8 @@ class Player {
     }
     if(datosTransaccion.faltante > 0) {
       this.declararBancarrotaRentas(propietario, possessions);
+    } else {
+      this.status = this.nombre + " ha transferido $" + monto + " a " + propietario.nombre;
     }
   }
 
@@ -113,6 +131,7 @@ class Player {
     for (let possession of possessions) {
       if (possession.id == idPossession) {
         possession.hipotecarEstructura(this);
+        this.status = this.nombre + " ha hipotecado una estructura en " + possession.nombre + " por $" + possession.calcularHipotecaEstructura();
         return true;
       }
     }
@@ -124,6 +143,7 @@ class Player {
     for (let possession of possessions) {
       if (possession.id == idPossession) {
         possession.construirEstructura(this);
+        this.status = this.nombre + " ha decidido contruir una estructura en " + possession.nombre + " por $" + possession.precioEstructura();
         return true;
       }
     }
@@ -135,6 +155,7 @@ class Player {
     for (let possession of possessions) {
       if (possession.id == idPossession) {
         possession.hipotecar(this);
+        this.status = this.nombre + " ha decidido hipotecar " + possession.nombre + " por $" + possession.calcularHipoteca();
         return true;
       }
     }
@@ -146,6 +167,7 @@ class Player {
     for (let possession of possessions) {
       if (possession.id == idPossession) {
         possession.deshipotecar(this);
+        this.status = this.nombre + " ha decidido deshipotecar " + possession.nombre + " por $" + possession.calcularDeshipoteca();
         return true;
       }
     }
@@ -156,24 +178,33 @@ class Player {
     if(this.dinero >= possession.precio) {
       this.dinero -= possession.precio;
       possession.idPlayer = this.id;
-      console.log("El jugador " + this.nombre + " ha comprado el apropiable a un precio de $" + possession.precio + ", ahora el jugador tiene: $" + this.dinero + " de saldo")
+      this.status = this.nombre + " ha comprado la posesion " + possession.nombre + " por $" + possession.precio;
+      console.log("El jugador " + this.nombre + " ha comprado el apropiable a un precio de $" + possession.precio +
+      ", ahora el jugador tiene: $" + this.dinero + " de saldo");
       return true;
     }
+    this.status = this.nombre + " no tiene dinero suficiente para comprar " + possession.nombre;
     console.log("El jugador " + this.nombre + " NO tiene saldo suficiente para comprar el apropiable");
     return false;
   }
 
   updateState() {
     //Obtiene el estado del game
-    return {
+    let listaActualizar = {
       nombre: this.nombre,
       dinero: this.dinero,
       bancarrota: this.bancarrota,
       squareActual: this.squareActual,
       numTurno: this.numTurno,
       isMovBoard: this.isMovBoard,
-      seccionActual: this.seccionActual
-    };
+      //seccionActual: this.seccionActual
+    }
+    if(this.seccionActual != C.SECCIONES.MENU_ACCION_CONSTRUIR_CASA && this.seccionActual != C.SECCIONES.MENU_ACCION_HIPOTECAR_CASA
+       && this.seccionActual != C.SECCIONES.MENU_ACCION_HIPOTECAR_POSESION && this.seccionActual != C.SECCIONES.MENU_ACCION_DESHIPOTECAR_POSESION) {
+        listaActualizar = {...listaActualizar, seccionActual: this.seccionActual}
+        console.log(this.seccionActual, C.SECCIONES.MENU_ACCION_HIPOTECAR_POSESION);
+    }
+    return listaActualizar;
   }
 }
 module.exports = Player;

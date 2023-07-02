@@ -1,19 +1,19 @@
 const DBManager = require('./DBManager');
-const Board = require('../entities/Board');
-const Game = require('../entities/Game');
-const Player = require('../entities/Player');
 const Property = require('../entities/Property');
 const Railroad = require('../entities/Railroad');
+const Utility = require('../entities/Utility');
+const Empty = require('../entities/Empty');
+const FindObjects = require('./FindObjects');
+const CreateObjects = require('./CreateObjects');
 const C = require('../constants/GameConstants');
 
 class GameManager {
-    //SUGERENCIA: EXTRAER MAS METODOS FINDS Y REUTILIZARLOS (AFINAR MAS EL CODIGO)
 
     static games = [];
-
     constructor(orm) {
-        this.orm = orm;
         this.dbm = new DBManager(orm);
+        this.find = new FindObjects(orm);
+        this.create = new CreateObjects(orm);
     }
 
     static addGame(game) {
@@ -26,245 +26,154 @@ class GameManager {
         }
     }
 
-    async findProperties(idBoard) {
-        //Buscamos todas las properties que pertenecen al board
-        let properties = [];
-        let propertiesBBDD = await this.dbm.findProperties(idBoard);
-        for (let propertyBBDD of propertiesBBDD) {
-            let property = new Property({
-                nombre: propertyBBDD.nombre,
-                precio: propertyBBDD.precio,
-                baseAlquiler: propertyBBDD.baseAlquiler,
-                nivelEstructura: propertyBBDD.nivelEstructura,
-                color: propertyBBDD.color,
-                hipotecado: propertyBBDD.hipotecado,
-                posicionBoard: propertyBBDD.posicionBoard,
-                id: propertyBBDD.id,
-                idPlayer: propertyBBDD.idPlayer
-            });
-            properties.push(property);
-        }
-        return properties;
-    }
-
-    async findRailroads(idBoard) {
-        //Buscamos todos los railroads que pertenecen al board
-        let railroads = [];
-        let railroadsBBDD = await this.dbm.findRailroads(idBoard);
-        for (let railroadBBDD of railroadsBBDD) {
-            let railroad = new Railroad({
-                nombre: railroadBBDD.nombre,
-                precio: railroadBBDD.precio,
-                baseAlquiler: railroadBBDD.baseAlquiler,
-                hipotecado: railroadBBDD.hipotecado,
-                posicionBoard: railroadBBDD.posicionBoard,
-                id: railroadBBDD.id,
-                idPlayer: railroadBBDD.idPlayer
-            });
-            railroads.push(railroad);
-        }
-        return railroads;
-    }
-
-    async findBoard(idGame) {
-        let boardBBDD = await this.dbm.findBoard(idGame);
-        if (boardBBDD == null) {
-            boardBBDD = await this.dbm.createBoard(idGame);
-        }
-
-        let board = new Board({
-            id: boardBBDD.id,
-        })
-
-        return board;
-    }
-
-    async findPlayers(idGame) {
-
-        let players = [];
-        let playersBBDD = await this.dbm.findPlayers(idGame);
-        if (playersBBDD != null) {
-            playersBBDD.forEach(player => {
-                players.push(new Player({
-                    id: player.id,
-                    nombre: player.nombre,
-                    dinero: player.dinero,
-                    bancarrota: player.bancarrota,
-                    squareActual: player.squareActual,
-                    numTurno: player.numTurno,
-                    isMovBoard: player.isMovBoard,
-                    seccionActual: player.seccionActual
-                }));
-            });
-        }
-        return players;
-    }
-
-    async findGame(idGame) {
-
-        //Se revisa si se encuentra en el GameManager
-        let gameEncontrado = null;
-        for (let game of GameManager.games) {
-            if (game.id == idGame) {
-                gameEncontrado = game;
-                break;
-            }
-        }
-        if (gameEncontrado) {
-            return gameEncontrado;
-        }
-
-        //En caso contrario, se busca en la base de datos
-        let gameBBDD = await this.dbm.findGame(idGame);
-        if (gameBBDD != null) {
-            
-            let board = await this.findBoard(idGame);
-            let properties = await this.findProperties(board.id);
-            let railroads = await this.findRailroads(board.id);
-            board.asignarSquares(properties.concat(railroads));
-            let players = await this.findPlayers(gameBBDD.id);
-
-            let game = new Game({
-                players: players,
-                board: board,
-                turno: gameBBDD.turno,
-                gameFinalizado: gameBBDD.gameFinalizado,
-                gameComenzado: gameBBDD.gameComenzado,
-                id: gameBBDD.id,
-            })
-            GameManager.addGame(game);
-            return game;
-        }
-        return { error: "Juego no encontrado" }
-    }
-    async newPlayer(idGame, nombrePlayer) {
-        //Se crea un nuevo jugador para ese juego
-        let playerBBDD = await this.dbm.createPlayer(nombrePlayer, idGame);
-        let player = new Player({
-            id: playerBBDD.id,
-            nombre: playerBBDD.nombre,
-        });
-        return player;
-    }
-
-    async newSquares(idBoard) {
-        //--- GENERACION DE SQUARES
-        let squaresBBDD = await this.dbm.generateSquares();
-        let squares = [];
-        for (let squareBBDD of squaresBBDD) {
-            console.log(squareBBDD.posicionBoard);
-            if (squareBBDD.tipo === C.TIPOS_SQUARE.PROPERTY) {
-                let propertyBBDD = await this.dbm.createProperty({
-                    nombre: squareBBDD.nombre,
-                    precio: squareBBDD.precio,
-                    baseAlquiler: squareBBDD.baseAlquiler,
-                    nivelEstructura: C.NIVEL_ESTRUCTURA_DEFAULT,
-                    color: squareBBDD.color,
-                    hipotecado: false,
-                    posicionBoard: squareBBDD.posicionBoard,
-                    idBoard: idBoard
-                });
-
-                squares.push(new Property({
-                    nombre: squareBBDD.nombre,
-                    precio: squareBBDD.precio,
-                    baseAlquiler: squareBBDD.baseAlquiler,
-                    nivelEstructura: C.NIVEL_ESTRUCTURA_DEFAULT,
-                    color: squareBBDD.color,
-                    hipotecado: false,
-                    posicionBoard: squareBBDD.posicionBoard,
-                    id: propertyBBDD.id
-                }));
-            }
-            else if(squareBBDD.tipo === C.TIPOS_SQUARE.RAILROAD) {
-                let railroadBBDD = await this.dbm.createRailroad({
-                    nombre: squareBBDD.nombre,
-                    precio: squareBBDD.precio,
-                    baseAlquiler: squareBBDD.baseAlquiler,
-                    hipotecado: false,
-                    posicionBoard: squareBBDD.posicionBoard,
-                    idBoard: idBoard
-                });
-
-                squares.push(new Railroad({
-                    nombre: railroadBBDD.nombre,
-                    precio: railroadBBDD.precio,
-                    baseAlquiler: railroadBBDD.baseAlquiler,
-                    hipotecado: railroadBBDD.hipotecado,
-                    posicionBoard: squareBBDD.posicionBoard,
-                    id: railroadBBDD.id
-                }))
-            }
-        }
-        return squares;
-        //---
-    }
-
-    async newBoard(idGame) {
-        let boardBBDD = await this.dbm.createBoard(idGame);
-
-        let board = new Board({
-            id: boardBBDD.id,
-        });
-
-        return board;
-    }
-
-    async newGame() {
-        let gameBBDD = await this.dbm.createGame();
-        let board = await this.newBoard(gameBBDD.id);
-        let squares = await this.newSquares(board.id);
-        board.asignarSquares(squares);
-
-        let game = new Game({
-            board: board,
-            id: gameBBDD.id,
-        });
-
-        GameManager.addGame(game);
-        return game;
-    }
-
     async saveChanges(idGame) {
-        let game = await this.findGame(idGame);
-        await this.dbm.updateGame(idGame, game.updateState());
+        let game = await this.find.findGame(idGame, GameManager);
+        await this.dbm.updateModelById('Game', idGame, game.updateState());
 
         for (const player of game.players) {
-            await this.dbm.updatePlayer(player.id, player.updateState());
+            await this.dbm.updateModelById('Player', player.id, player.updateState());
         }
 
         for (const square of game.board.squares) {
             if (square instanceof Property) {
-                await this.dbm.updateProperty(square.idUpdate, square.updateState());
+                await this.dbm.updateModelById('Property', square.idUpdate, square.updateState());
             }
             else if (square instanceof Railroad) {
-                await this.dbm.updateRailroad(square.idUpdate, square.updateState());
+                await this.dbm.updateModelById('RailRoad', square.idUpdate, square.updateState());
+            }
+            else if (square instanceof Utility) {
+                await this.dbm.updateModelById('Utility', square.idUpdate, square.updateState());
+            }
+            else if (square instanceof Empty) {
+                await this.dbm.updateModelById('Empty', square.idUpdate, square.updateState());
             }
         }
-
-        await this.dbm.updateBoard(game.board.id, game.board.updateState());
+        await this.dbm.updateModelById('Board', game.board.id, game.board.updateState());
 
         return game;
     }
-    async joinGame(idGame, nombrePlayer) {
-        let game = await this.findGame(idGame);
-        if (!game.error) {
-            //Se crea un nuevo jugador para ese juego
-            let player = await this.newPlayer(idGame, nombrePlayer);
-            game.joinGame(player);
-            return game;
-        }
-        return { error: "Juego no encontrado" }
-    }
-    async startGame(idGame) {
+    async joinGame(idGame, nombrePlayer, userID) {
+        let game = await this.find.findGame(idGame, GameManager);
+        let playerEnPartida = false;
+        let nickRepetido = false;
+        let nombreMuyLargo = false;
+        let cupoDisponible = false;
 
-        let game = await this.findGame(idGame);
+        if (nombrePlayer.length > C.LEN_NICKNAME_MAX) {
+            nombreMuyLargo = true;
+        }
+        if (!game.error && game.players) {
+            game.players.forEach(player => {
+                if (player.idUser == userID) {
+                    //El jugador ya se encuentra en la partida
+                    playerEnPartida = true;
+                }
+                if (player.nombre == nombrePlayer) {
+                    //El nickname ya se encuentra en la partida
+                    nickRepetido = true;
+                }
+            });
+            cupoDisponible = game.players.length < C.MAX_PLAYER_PER_GAME;
+            if (game && !game.gameComenzado && !playerEnPartida && cupoDisponible
+                && !nickRepetido && !nombreMuyLargo) {
+                //Se crea un nuevo jugador para ese juego
+                let player = await this.create.newPlayer(idGame, nombrePlayer, userID);
+                game.joinGame(player);
+                await this.saveChanges(idGame);
+                return { game };
+            }
+        }
+        return !game
+            ? { error: "Juego no encontrado", game }
+            : game.gameComenzado
+                ? { error: "Juego ya ha sido inicializado", game }
+                : playerEnPartida
+                    ? { error: "Jugador ya se encuentra en la partida", game }
+                    : !cupoDisponible
+                        ? { error: "La sala se encuentra llena", game }
+                        : nickRepetido
+                            ? { error: "El nickname ya se encuentra en la sala", game }
+                            : nombreMuyLargo
+                                ? { error: "El nickname tiene una longitud mayor a 12 caracteres", game }
+                                : { error: "Ha ocurrido un error", game };
+    }
+
+    async voteGame(idGame, voteStart, userID) {
+        let game = await this.find.findGame(idGame, GameManager);
+
         if (!game.error) {
+            game.players.forEach(player => {
+                if (player.idUser == userID) {
+                    player.votarComenzarPartida(voteStart);
+                }
+            })
+        }
+        //No se guardan cambios porque no es importante en este caso.
+        return { game }
+    }
+
+    async leaveGame(idGame, userID) {
+        let game = await this.find.findGame(idGame, GameManager);
+        let idPlayer = null;
+        if (!game.error) {
+            game.players.forEach(player => {
+                if (player.idUser == userID) {
+                    idPlayer = player.id;
+                }
+            });
+            let result = false;
+            if (idPlayer && !game.gameComenzado && !game.gameFinalizado) {
+                result = game.leaveGame(idPlayer);
+                this.dbm.deleteData('Player', { id: idPlayer, idGame: idGame });
+                await this.saveChanges(idGame);
+            }
+            if (result) return { game }
+            else if (game.gameComenzado) return { error: "La sala ya ha sido inicializada", game }
+            else if (game.gameFinalizado) return { error: "El juego ya ha terminado", game }
+            else return { error: "No se ha encontrado al jugador", game }
+        }
+        else {
+            return { error: game.error }
+        }
+
+    }
+
+    async startGame(idGame, userID) {
+        let game = await this.find.findGame(idGame, GameManager);
+        let playerEnPartida = false;
+        let todosDeAcuerdo = true;
+        let nPlayers = 0;
+        let cumpleMinPlayers = false;
+        if (!game.error) {
+            game.players.forEach(player => {
+                nPlayers++;
+                if (player.idUser == userID) {
+                    //El jugador ya se encuentra en la partida
+                    //Entonces puede iniciar el juego porque le pertenece
+                    playerEnPartida = true;
+                }
+                if (!player.votoComienzo) {
+                    todosDeAcuerdo = false;
+                }
+            });
+        }
+        if (nPlayers >= C.MIN_PLAYER_PER_GAME) cumpleMinPlayers = true;
+        if (!game.error && !game.gameComenzado && playerEnPartida && todosDeAcuerdo && cumpleMinPlayers) {
             game.inicializarGame();
             await this.saveChanges(idGame);
-            return game;
+            return { game };
         }
-        return { error: "Juego no encontrado" }
+        return game.error
+            ? { error: "Juego no encontrado", game }
+            : !playerEnPartida
+                ? { error: "Jugador no pertenece a ese juego", game }
+                : game.gameComenzado
+                    ? { error: "Juego ya ha sido inicializado", game }
+                    : !todosDeAcuerdo
+                        ? { error: "Faltan votaciones para iniciar el juego", game }
+                        : !cumpleMinPlayers
+                            ? { error: "Se necesitan al menos 2 jugadores para poder iniciar el juego", game }
+                            : { error: "Ha ocurrido un error", game };
     }
 }
 

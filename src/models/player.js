@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Game, {
         foreignKey: 'idGame'
       });
+      this.belongsTo(models.User, {
+        foreignKey: 'idUser'
+      }); 
     }
   }
   Player.init({
@@ -23,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     numTurno: DataTypes.INTEGER,
     isMovBoard: DataTypes.BOOLEAN,
     seccionActual: DataTypes.STRING,
-    idGame: DataTypes.INTEGER
+    idGame: DataTypes.INTEGER,
+    idUser: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Player',
