@@ -6,13 +6,9 @@ async function deploy() {
   console.log("Installing dependencies...");
   console.log(output1);
 
-  const { stdout: output2 } = await exec("yarn db:migrate");
-  console.log("Migrating database...");
+  const { stdout: output2 } = await exec("yarn reset");
   console.log(output2);
 
-  const { stdout: output3 } = await exec("yarn db:seed");
-  console.log("Seeding database...");
-  console.log(output3);
 }
 
 deploy();
