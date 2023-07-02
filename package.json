@@ -31,7 +31,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "reset": "yarn sequelize-cli db:migrate:undo:all && yarn sequelize-cli db:migrate && yarn sequelize-cli db:seed:all",
+    "reset": "yarn sequelize-cli db:migrate && yarn sequelize-cli db:seed:all",
     "connectdb": "sudo psql -U fabrirandon -d monopolygame_development -h 127.0.0.1",
     "deploy": "node start.js"
   }
