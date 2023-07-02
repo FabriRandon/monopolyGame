@@ -14,22 +14,14 @@ class UsersManager {
       username, mail
     };
     let status = 201;
-    console.log("1");
     const userBBDD = await this.dbm.findOneData('User', { mail: mail });
-    console.log("2");
-    console.log(userBBDD);
     if (userBBDD) {
       body = `El usuario con el correo '${mail}' ya existe`;
       status = 400;
-      console.log("3");
     } else {
-      console.log("4");
       //Se crea un usuario
       const saltRounds = 10;
-      console.log(password);
-      console.log("5");
       const hashPassword = await crypto.hash(password, saltRounds);
-      console.log("6");
       const role = "user";
       const userBBDD = await this.dbm.createUser(username, mail, hashPassword, role);
       if (userBBDD.error) {
